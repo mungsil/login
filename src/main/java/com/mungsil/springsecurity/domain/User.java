@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.stereotype.Component;
+
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -19,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long id;
-
+//    private Timestamp loginDate;
     private String loginId;
     private String password;
     private String username;
