@@ -29,5 +29,7 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(15) DEFAULT 'USER'")
     private Role role;
+    private String provider;
+    private String providerId;
 
 }

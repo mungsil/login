@@ -3,6 +3,8 @@ package com.mungsil.springsecurity.controller;
 import com.mungsil.springsecurity.domain.User;
 import com.mungsil.springsecurity.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class IndexController {
     }
 
     @GetMapping("/admin")
+    @ResponseBody
     public String admin() {
         return "admin";
     }
@@ -33,7 +36,7 @@ public class IndexController {
     }
 
 
-    @GetMapping("/loginForm")
+    @GetMapping("/login")
     public String loginForm() {
         return "loginForm";
     }
@@ -42,6 +45,12 @@ public class IndexController {
         return "joinForm";
     }
 
+//    @Secured("ROLE_ADMIN"): 권한 하나만 설정가능
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+    @GetMapping("/info")
+    public @ResponseBody String info() {
+        return "개인정보";
+    }
 
     @PostMapping("/joinProc")
     public String joinProc(User user) {

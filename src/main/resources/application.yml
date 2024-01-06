@@ -18,5 +18,18 @@ spring:
         format_sql: true
         use_sql_comments: true
         hbm2ddl:
-          auto: create
+          auto: update
         default_batch_fetch_size: 1000
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 125442147065-bsejfnh9mnqa44sisjm3v3uf2dsuvulj.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - profile
+              - email
+
+
+
