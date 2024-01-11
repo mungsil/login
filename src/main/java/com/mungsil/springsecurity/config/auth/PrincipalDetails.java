@@ -1,9 +1,12 @@
 package com.mungsil.springsecurity.config.auth;
 
 import com.mungsil.springsecurity.domain.User;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -16,11 +19,12 @@ import java.util.Collection;
 //Security Session -> Authentication -> UserDetails
 
 @RequiredArgsConstructor
+@Data
 public class PrincipalDetails implements UserDetails {
 
     // 내가 정의해놓은 user 객체 등록
     private final User user;
-    
+
     // 해당 User의 권한을 리턴하는 곳
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
