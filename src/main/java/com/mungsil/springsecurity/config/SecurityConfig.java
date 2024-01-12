@@ -7,6 +7,7 @@ import com.mungsil.springsecurity.config.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,9 +21,10 @@ import org.springframework.security.web.SecurityFilterChain;
 //@EnableGlobalMethodSecurity(securedEnabled = true) : secured 어노테이션 활성화, prePostEnabled=true: preAuthorize 및 postAuthorize 어노테이션 활성화
 public class SecurityConfig{
 
+    // 로그인 후처리
     private final PrincipalOauth2UserService principalOauth2UserService;
 
-    @Bean
+    @Bean @Lazy
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
