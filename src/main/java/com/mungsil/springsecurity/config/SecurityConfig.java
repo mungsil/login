@@ -7,6 +7,7 @@ import com.mungsil.springsecurity.config.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,14 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity // 스프링 필터 체인에 SecurityFilterChain 등록
+@EnableWebSecurity() // 스프링 필터 체인에 SecurityFilterChain 등록
 @EnableMethodSecurity(securedEnabled = true)// 아래와 차이?
 //@EnableGlobalMethodSecurity(securedEnabled = true) : secured 어노테이션 활성화, prePostEnabled=true: preAuthorize 및 postAuthorize 어노테이션 활성화
 public class SecurityConfig{
 
+    // 로그인 후처리
     private final PrincipalOauth2UserService principalOauth2UserService;
 
-    @Bean
+    @Bean @Lazy
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -37,7 +39,7 @@ public class SecurityConfig{
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                         .anyRequest().permitAll())
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
+                        .loginPage("/loginForm")
                         .loginProcessingUrl("/login") //시큐리티가 대신 로그인 진행
                         .usernameParameter("userID")
 //                        .usernameParameter("username이 아닌 다른 변수명으로 username을 입력받았을 경우의 변수명 입력, ex) username2")
