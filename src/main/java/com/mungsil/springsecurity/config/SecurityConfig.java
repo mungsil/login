@@ -24,6 +24,7 @@ public class SecurityConfig{
     // 로그인 후처리
     private final PrincipalOauth2UserService principalOauth2UserService;
 
+    //순환참조 발생하지 않도록 재설계
     @Bean @Lazy
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

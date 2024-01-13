@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
-    // 인자로 받는 username과 로그인 시 넘어가는 usernameParameter 변수명이 동일해야함
     private final UserRepository userRepository;
+
+    //함수 종료 시 @AuthenticationPrincipal 이 만들어진다.
+    //인자로 받는 username과 로그인 시 넘어가는 usernameParameter 변수명이 동일해야함
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByLoginId(username);
