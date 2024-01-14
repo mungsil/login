@@ -1,13 +1,10 @@
 package com.mungsil.springsecurity.config.oauth;
 
 import com.mungsil.springsecurity.config.auth.PrincipalDetails;
-import com.mungsil.springsecurity.config.oauth.provider.GoogleUserInfo;
-import com.mungsil.springsecurity.config.oauth.provider.NaverUserInfo;
 import com.mungsil.springsecurity.config.oauth.provider.OAuth2UserInfo;
 import com.mungsil.springsecurity.domain.User;
 import com.mungsil.springsecurity.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,13 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired @Lazy
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    //OAuth2UserInfo 타입의 빈을 조회 후 해당 빈의 이름과 매핑하여 생성자 주입
+    private final Map<String, OAuth2UserInfo> userInfoMap;
 
     //구글로부터 받은 userRequest 데이터의 후처리 메소드
     //함수 종료 시 @AuthenticationPrincipal 이 만들어진다.
@@ -37,13 +34,17 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         System.out.println("getAttributes:" + oAuth2User.getAttributes());
 
         String provider = userRequest.getClientRegistration().getRegistrationId();// google
-        OAuth2UserInfo oAuth2UserInfo=null;
+        OAuth2UserInfo oAuth2UserInfo = null;
         if (provider.equals("google")) {
             System.out.println("구글 로그인 요청");
-            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+            oAuth2UserInfo = userInfoMap.get("googleUserInfo");
+            oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
+
         } else if (provider.equals("naver")) {
             System.out.println("네이버 로그인 요청");
-            oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
+            oAuth2UserInfo = userInfoMap.get("naverUserInfo");
+            oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
+
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
@@ -62,10 +63,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     .provider(provider)
                     .providerId(providerId).build();
             user = userRepository.save(oauthUser);
-        }else {
-            System.out.println("로그인 ");
+        } else {
+            System.out.println("로그인");
         }
 
-        return new PrincipalDetails(user,oAuth2User.getAttributes());
+        return new PrincipalDetails(user, oAuth2User.getAttributes());
     }
 }
