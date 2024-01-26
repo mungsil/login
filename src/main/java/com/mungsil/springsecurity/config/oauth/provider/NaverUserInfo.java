@@ -1,12 +1,17 @@
 package com.mungsil.springsecurity.config.oauth.provider;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@AllArgsConstructor
 public class NaverUserInfo implements OAuth2UserInfo{
     private Map<String, Object> attributes;
+
+    @Override
+    public void setAttributes(Map<String, Object> attributes) {
+        this.attributes = attributes;
+    }
     @Override
     public String getProviderId() {
         return (String) attributes.get("id");
