@@ -1,4 +1,4 @@
-package com.mungsil.springsecurity.config.oauth.provider;
+package com.mungsil.springsecurity.oauth2.oauth.userInfo;
 
 import java.util.Map;
 

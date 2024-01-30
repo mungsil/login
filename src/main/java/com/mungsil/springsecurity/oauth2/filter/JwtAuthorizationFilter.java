@@ -1,0 +1,76 @@
+package com.mungsil.springsecurity.oauth2.filter;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.mungsil.springsecurity.domain.User;
+import com.mungsil.springsecurity.oauth2.auth.PrincipalDetails;
+import com.mungsil.springsecurity.oauth2.utils.JwtUtils;
+import com.mungsil.springsecurity.repository.UserRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import java.io.IOException;
+
+
+
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
+    private UserRepository userRepository;
+    private JwtUtils jwtUtils;
+
+
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,JwtUtils jwtUtils) {
+        super(authenticationManager);
+        this.jwtUtils = jwtUtils;
+        System.out.println("jwtUtils: "+jwtUtils.getHEADER_STRING());
+        System.out.println("JwtAuthorizationFilter 실행");
+    }
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+        super(authenticationManager);
+        this.userRepository = userRepository;
+    }
+
+
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        System.out.println("JwtAuthorizationFilter.doFilterInternal 실행");
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
+            chain.doFilter(request,response);
+            return;
+        }
+
+        // 아래 그냥 JwtUtils의 기능으로 빼죠
+        String token = authHeader.replace("Bearer ", "");
+        String username = JWT
+                .require(Algorithm.HMAC512("달콤한초콜릿만원에팝니다")).build()
+                .verify(token)
+                .getClaim("username").asString();
+        // 서명이 정상적으로 되었을 경우 실행되어요.
+        if (username != null) {
+            User user = userRepository.findByUsername(username);
+            PrincipalDetails principalDetails = new PrincipalDetails(user);
+
+            //[why] authenticationManager.authenticate()로 authentication 객체를 얻어오는 방법은 사용하지 않아?
+            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+
+            // 시큐리티의 세션에 접근하여 authentication 객체를 저장해요.
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        chain.doFilter(request,response);
+
+    }
+}

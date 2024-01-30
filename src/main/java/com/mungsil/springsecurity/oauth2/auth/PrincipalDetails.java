@@ -1,12 +1,10 @@
-package com.mungsil.springsecurity.config.auth;
+package com.mungsil.springsecurity.oauth2.auth;
 
 import com.mungsil.springsecurity.domain.User;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,6 +60,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         return user.getUsername();
     }
 
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -90,5 +89,9 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     public String getName() {
         //별로 안중요해서 null 처리해도 ok(안쓴다는디요)
         return (String) attributes.get("sub");
+    }
+
+    public String getEmail() {
+        return user.getEmail();
     }
 }

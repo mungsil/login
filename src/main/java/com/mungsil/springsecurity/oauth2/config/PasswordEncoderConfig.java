@@ -1,4 +1,4 @@
-package com.mungsil.springsecurity.config;
+package com.mungsil.springsecurity.oauth2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

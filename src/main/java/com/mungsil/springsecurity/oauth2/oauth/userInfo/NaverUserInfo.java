@@ -1,7 +1,4 @@
-package com.mungsil.springsecurity.config.oauth.provider;
-
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+package com.mungsil.springsecurity.oauth2.oauth.userInfo;
 
 import java.util.Map;
 

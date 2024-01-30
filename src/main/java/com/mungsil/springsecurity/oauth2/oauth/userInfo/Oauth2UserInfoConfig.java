@@ -1,8 +1,5 @@
-package com.mungsil.springsecurity.config.oauth;
+package com.mungsil.springsecurity.oauth2.oauth.userInfo;
 
-import com.mungsil.springsecurity.config.oauth.provider.GoogleUserInfo;
-import com.mungsil.springsecurity.config.oauth.provider.NaverUserInfo;
-import com.mungsil.springsecurity.config.oauth.provider.OAuth2UserInfo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

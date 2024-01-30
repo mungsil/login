@@ -1,7 +1,7 @@
-package com.mungsil.springsecurity.config.oauth;
+package com.mungsil.springsecurity.oauth2.oauth;
 
-import com.mungsil.springsecurity.config.auth.PrincipalDetails;
-import com.mungsil.springsecurity.config.oauth.provider.OAuth2UserInfo;
+import com.mungsil.springsecurity.oauth2.auth.PrincipalDetails;
+import com.mungsil.springsecurity.oauth2.oauth.userInfo.OAuth2UserInfo;
 import com.mungsil.springsecurity.domain.User;
 import com.mungsil.springsecurity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +66,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else {
             System.out.println("로그인");
         }
+
 
         return new PrincipalDetails(user, oAuth2User.getAttributes());
     }

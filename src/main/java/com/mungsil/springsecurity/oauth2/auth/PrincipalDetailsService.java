@@ -1,4 +1,4 @@
-package com.mungsil.springsecurity.config.auth;
+package com.mungsil.springsecurity.oauth2.auth;
 
 import com.mungsil.springsecurity.domain.User;
 import com.mungsil.springsecurity.repository.UserRepository;
