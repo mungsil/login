@@ -33,32 +33,38 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println("getAttributes:" + oAuth2User.getAttributes());
 
-        String provider = userRequest.getClientRegistration().getRegistrationId();// google
+        String provider = userRequest.getClientRegistration().getRegistrationId();// google, naver
         OAuth2UserInfo oAuth2UserInfo = null;
+        //각 provider에 맞는 attribute custom setting 하기
         if (provider.equals("google")) {
             System.out.println("구글 로그인 요청");
             oAuth2UserInfo = userInfoMap.get("googleUserInfo");
-            oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
-
         } else if (provider.equals("naver")) {
             System.out.println("네이버 로그인 요청");
             oAuth2UserInfo = userInfoMap.get("naverUserInfo");
-            oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
-
         }
+        //리소스서버로부터 얻어온 attribute를 OAuth2UserInfo 타입 객체에 전달
+        oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
 
+        //provider 구분 역할 e.g.naver,google
         String providerId = oAuth2UserInfo.getProviderId();
-        String name = oAuth2UserInfo.getName();
         String userId = provider + "_" + providerId;
+        //비밀번호는 설정하지 않아도 된다.(선택)
         String password = bCryptPasswordEncoder.encode("IwantToGoHome");
 
+        //가입된 회원인지 조회한다.
         User user = userRepository.findByLoginId(userId);
+
         if (user == null) {
             System.out.println("회원가입");
+
+            String name = oAuth2UserInfo.getName();
+            String email = oAuth2UserInfo.getEmail();
 
             User oauthUser = User.builder()
                     .username(name)
                     .loginId(userId)
+                    .email(email)
                     .password(password)
                     .provider(provider)
                     .providerId(providerId).build();
@@ -66,7 +72,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else {
             System.out.println("로그인");
         }
-
 
         return new PrincipalDetails(user, oAuth2User.getAttributes());
     }

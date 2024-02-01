@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import java.io.IOException;
 
 
-
+//Authorization 헤더가 있으면 실행된다.
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UserRepository userRepository;
@@ -54,16 +54,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         // 아래 그냥 JwtUtils의 기능으로 빼죠
+        //토큰 유효성 검사
         String token = authHeader.replace("Bearer ", "");
-        String username = JWT
+        String email = JWT
                 .require(Algorithm.HMAC512("달콤한초콜릿만원에팝니다")).build()
                 .verify(token)
-                .getClaim("username").asString();
-        // 서명이 정상적으로 되었을 경우 실행되어요.
-        if (username != null) {
-            User user = userRepository.findByUsername(username);
+                .getClaim("email").asString();
+        //토큰 정상 판단 시 실행
+        if (email != null) {
+            User user = userRepository.findByEmail(email);
+            //@AuthenticationPrincipal 사용을 위해 principalDetails를 생성한다.
             PrincipalDetails principalDetails = new PrincipalDetails(user);
-
             //[why] authenticationManager.authenticate()로 authentication 객체를 얻어오는 방법은 사용하지 않아?
             Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
 

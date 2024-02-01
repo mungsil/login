@@ -26,7 +26,7 @@ public class PrincipalDetailsService implements UserDetailsService {
         // *** 검증 로직 구현 ***
         if (user != null) {
             // 시큐리티 session의 Authentication에 저장
-            System.out.println(username);
+            System.out.println("PrincipalDetailsService.loadUserByUsername 실행"+username);
             return new PrincipalDetails(user);
         }
         return null;

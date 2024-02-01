@@ -17,28 +17,25 @@ public class IndexController {
 
     private final UserService userService;
 
-    // SessionCreationPolicy.NEVER 방식을 사용한다면 Authentication 객체를 사용할 수 있다.
-    // !! SessionCreationPolicy.STATELESS 방식 사용하자. !!
-/*    @GetMapping("/test/oauth/login")
-    public String tesOauthLogin(Authentication authentication
-            , @AuthenticationPrincipal OAuth2User user) {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+    @GetMapping("/test/oauth/login")
+    public String tesOauthLogin(Authentication authentication) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        User user = principal.getUser();
 
-        return "OAuth2User 세션 정보 확인, Authentication: "+ oAuth2User.getAttributes()
-                +"@AuthenticationPrincipal: "+user.getAttributes();
-    }*/
+        return "세션 정보 확인, Authentication: " + user.getUsername();
+    }
 
-
-
-    /**
-     * 변경 필요
-     * @param principalDetails @AuthenticationPrincipal 사용불가
-     * @return
-     */
     @GetMapping("/user")
     public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        System.out.println("principalDeatils:"+principalDetails.getUser());
+        User user = principalDetails.getUser();
+        System.out.println("이름: "+ user.getUsername());
         return "user";
+    }
+
+    @GetMapping("/test")
+    public String test() {
+
+        return "test 성공";
     }
 
 
