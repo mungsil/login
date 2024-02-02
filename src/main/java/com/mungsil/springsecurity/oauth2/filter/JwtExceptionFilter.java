@@ -13,7 +13,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-//유효하지 않은 토큰 처리
+/**
+ * JwtAuthorizationFilter에서 발생한 Exception 을 처리한다.
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtExceptionFilter extends OncePerRequestFilter {

@@ -11,9 +11,12 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
+/**
+ * OAuthAttributes 로 변경
+ */
 @Service
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
@@ -26,6 +29,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     //구글로부터 받은 userRequest 데이터의 후처리 메소드
     //함수 종료 시 @AuthenticationPrincipal 이 만들어진다.
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         System.out.println("getAccessToken:" + userRequest.getAccessToken().getTokenValue());
         System.out.println("getClientRegistration:" + userRequest.getClientRegistration());
@@ -39,12 +43,15 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         if (provider.equals("google")) {
             System.out.println("구글 로그인 요청");
             oAuth2UserInfo = userInfoMap.get("googleUserInfo");
+            oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
+
         } else if (provider.equals("naver")) {
             System.out.println("네이버 로그인 요청");
             oAuth2UserInfo = userInfoMap.get("naverUserInfo");
+            oAuth2UserInfo.setAttributes((Map<String, Object>) oAuth2User.getAttributes().get("response"));
+
         }
         //리소스서버로부터 얻어온 attribute를 OAuth2UserInfo 타입 객체에 전달
-        oAuth2UserInfo.setAttributes(oAuth2User.getAttributes());
 
         //provider 구분 역할 e.g.naver,google
         String providerId = oAuth2UserInfo.getProviderId();

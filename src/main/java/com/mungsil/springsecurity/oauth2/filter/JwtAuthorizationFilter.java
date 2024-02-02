@@ -4,34 +4,37 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.mungsil.springsecurity.domain.User;
 import com.mungsil.springsecurity.oauth2.auth.PrincipalDetails;
-import com.mungsil.springsecurity.oauth2.utils.JwtUtils;
+import com.mungsil.springsecurity.oauth2.utils.JwtProvider;
 import com.mungsil.springsecurity.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
 import java.io.IOException;
 
 
-//Authorization 헤더가 있으면 실행된다.
+/**
+ * Authorization 헤더가 있으면 실행된다.
+ */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UserRepository userRepository;
-    private JwtUtils jwtUtils;
+    /**
+     *이거 DI 어떻게 받을건지 수정
+     */
+    private JwtProvider jwtProvider;
 
 
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,JwtUtils jwtUtils) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
         super(authenticationManager);
-        this.jwtUtils = jwtUtils;
-        System.out.println("jwtUtils: "+jwtUtils.getHEADER_STRING());
+        this.jwtProvider = jwtProvider;
+        System.out.println("jwtUtils: "+ jwtProvider.getHEADER_STRING());
         System.out.println("JwtAuthorizationFilter 실행");
     }
 
@@ -45,6 +48,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
+        /*val jwt = jwtProvider.resolveToken(request)
+
+        if (StringUtils.hasText(jwt) && jwtProvider.validateAccessToken(jwt)) {
+            val authentication = jwtProvider.findAuthentication(jwt)
+            SecurityContextHolder.getContext().authentication = authentication
+        }
+
+        filterChain.doFilter(request, response)*/
         System.out.println("JwtAuthorizationFilter.doFilterInternal 실행");
 
         String authHeader = request.getHeader("Authorization");
@@ -72,6 +83,5 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request,response);
-
     }
 }
