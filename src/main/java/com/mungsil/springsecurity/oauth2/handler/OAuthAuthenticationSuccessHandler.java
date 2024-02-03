@@ -1,7 +1,7 @@
-package com.mungsil.springsecurity.oauth2.oauth;
+package com.mungsil.springsecurity.oauth2.handler;
 
-import com.mungsil.springsecurity.oauth2.auth.PrincipalDetails;
-import com.mungsil.springsecurity.oauth2.utils.JwtProvider;
+import com.mungsil.springsecurity.oauth2.principal.PrincipalDetails;
+import com.mungsil.springsecurity.oauth2.JwtProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

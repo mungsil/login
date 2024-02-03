@@ -1,9 +1,8 @@
-package com.mungsil.springsecurity.oauth2.auth;
+package com.mungsil.springsecurity.oauth2.principal;
 
 import com.mungsil.springsecurity.domain.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.Map;
 
 //@RequiredArgsConstructor
 @Data
-public class PrincipalDetails implements UserDetails, OAuth2User {
+public class PrincipalDetails implements OAuth2User {
 
     // 내가 정의해놓은 user 객체 등록
     private User user;
@@ -48,41 +47,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         collect.add((GrantedAuthority) () -> user.getRole().toString());
 //        System.out.println(user.getRole().toString());
         return collect;
-    }
-
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return user.getUsername();
-    }
-
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    // 계정 활성화 여부 체크
-    @Override
-    public boolean isEnabled() {
-        // *** 1년동안 회원이 로그인을 안했을 경우 휴먼 계정 전환 기능 구현 ***
-        // 현재시간 - 로그인 시간 >1년 : return false
-        //user.getLoginDate();
-        return true;
     }
 
     @Override

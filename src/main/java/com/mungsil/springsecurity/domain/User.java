@@ -23,15 +23,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long id;
-//    private Timestamp loginDate;
-    private String loginId;
-    private String password;
     private String username;
     private String email;
     @Enumerated(value = EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(15) DEFAULT 'ROLE_USER'")
     private Role role;
     private String provider;
-    private String providerId;
-
 }

@@ -26,6 +26,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
+            //Authorization헤더가 있으면 실행되도록 변경할까말까할까말까
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
             response.setStatus(401);

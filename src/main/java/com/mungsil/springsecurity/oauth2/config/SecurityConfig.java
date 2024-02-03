@@ -6,9 +6,9 @@ package com.mungsil.springsecurity.oauth2.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mungsil.springsecurity.oauth2.filter.JwtAuthorizationFilter;
 import com.mungsil.springsecurity.oauth2.filter.JwtExceptionFilter;
-import com.mungsil.springsecurity.oauth2.oauth.OAuthAuthenticationFailureHandler;
-import com.mungsil.springsecurity.oauth2.oauth.OAuthAuthenticationSuccessHandler;
-import com.mungsil.springsecurity.oauth2.oauth.PrincipalOauth2UserService;
+import com.mungsil.springsecurity.oauth2.handler.OAuthAuthenticationFailureHandler;
+import com.mungsil.springsecurity.oauth2.handler.OAuthAuthenticationSuccessHandler;
+import com.mungsil.springsecurity.oauth2.authentication.PrincipalOauth2UserService;
 import com.mungsil.springsecurity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-//@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig{
 
 
@@ -39,8 +38,6 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        AuthenticationManager authenticationManager = this.createManager(http);
-        JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(authenticationManager, userRepository);
         JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter(new ObjectMapper());
 
         http
@@ -61,11 +58,9 @@ public class SecurityConfig{
                 .authorizeHttpRequests((authz) -> authz
                     .requestMatchers("/user/**").authenticated()
                     .anyRequest().permitAll());
-        http
-                .authenticationManager(authenticationManager);
 
         http
-                .addFilter(jwtAuthorizationFilter)
+                .addFilter(new JwtAuthorizationFilter(userRepository))
                 .addFilterBefore(jwtExceptionFilter,JwtAuthorizationFilter.class);
 
         return http.build();
