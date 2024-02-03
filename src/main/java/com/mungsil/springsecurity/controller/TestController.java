@@ -2,8 +2,6 @@ package com.mungsil.springsecurity.controller;
 
 import com.mungsil.springsecurity.oauth2.principal.PrincipalDetails;
 import com.mungsil.springsecurity.domain.User;
-import com.mungsil.springsecurity.service.UserService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class IndexController {
+public class TestController {
 
 
     @GetMapping("/test/oauth/login")
@@ -34,6 +32,11 @@ public class IndexController {
     public String test() {
 
         return "test 성공";
+    }
+
+    @GetMapping("/api/token/refresh")
+    public String reissueAccessToken() {
+        return null;
     }
 
 

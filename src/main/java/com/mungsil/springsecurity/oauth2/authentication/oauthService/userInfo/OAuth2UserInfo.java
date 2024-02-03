@@ -1,4 +1,4 @@
-package com.mungsil.springsecurity.oauth2.authentication.userInfo;
+package com.mungsil.springsecurity.oauth2.authentication.oauthService.userInfo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
