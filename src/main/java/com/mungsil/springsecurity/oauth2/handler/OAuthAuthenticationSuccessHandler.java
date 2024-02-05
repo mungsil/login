@@ -28,7 +28,6 @@ public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
     private String accessHeader;
 
     @Override
-
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();

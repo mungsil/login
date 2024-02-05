@@ -32,9 +32,10 @@ public class SecurityConfig{
     private final OAuthAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
-    //private final JwtAuthorizationFilter authorizationFilter;
 
-
+    /**
+     * @TODO CORS 필터 추가
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -57,7 +58,8 @@ public class SecurityConfig{
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated());
+                        .requestMatchers("/test","/logout").permitAll()
+                        .anyRequest().permitAll());
         http
                 .exceptionHandling(exceptionHadling-> exceptionHadling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 

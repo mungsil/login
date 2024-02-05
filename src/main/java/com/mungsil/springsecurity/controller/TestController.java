@@ -17,14 +17,14 @@ public class TestController {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         User user = principal.getUser();
 
-        return "세션 정보 확인, Authentication: " + user.getUsername();
+        return "세션 정보 확인, Authentication: " + user.getNickname();
     }
 
     //토큰만으로도 @AuthenticationPrincipal가 작동하는지 확인 부탁(service안거치고도 작동하는지 검증)
     @GetMapping("/user")
     public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         User user = principalDetails.getUser();
-        System.out.println("이름: "+ user.getUsername());
+        System.out.println("이름: "+ user.getNickname());
         return "user";
     }
 
@@ -34,10 +34,6 @@ public class TestController {
         return "test 성공";
     }
 
-    @GetMapping("/api/token/refresh")
-    public String reissueAccessToken() {
-        return null;
-    }
 
 
 }

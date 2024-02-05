@@ -9,7 +9,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2UserInfo {
     private final Map<String, Object> attributes;
-    private final String providerId;
-    private final String name;
+    private final String nickName;
+    private final String profileImage;
     private final String email;
 }

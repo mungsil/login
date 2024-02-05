@@ -6,30 +6,13 @@ import java.util.function.Function;
 
 public enum OAuthAttributes {
 
-    GOOGLE("google",attributes-> new OAuth2UserInfo(
-            attributes,
-            attributes.get("sub").toString(),
-            attributes.get("name").toString(),
-            attributes.get("email").toString()
-    )),
-    NAVER("naver",attributes->{
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-        return new OAuth2UserInfo(
-                response,
-                response.get("id").toString(),
-                response.get("name").toString(),
-                response.get("email").toString()
-        );
-    }),
-
     KAKAO("kakao", attributes -> {
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) attributes.get("profile");
+        Map<String, Object> profile = (Map<String, Object>) attributes.get("properties");
         return new OAuth2UserInfo(
                 attributes,
-                attributes.get("id").toString(),
                 profile.get("nickname").toString(),
-//                .profileImageUrl(String.valueOf(kakaoProfile.get("profile_image_url")))
+                profile.get("profile_image").toString(),
                 account.get("email").toString()
         );
     })

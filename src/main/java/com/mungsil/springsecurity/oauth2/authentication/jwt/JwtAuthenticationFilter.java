@@ -35,12 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (accessToken.isEmpty()) { //Bearer 로 시작하지 않거나 or 헤더에 액세스토큰이 담겨져 오지 않은 경우
             log.info("헤더에 엑세스토큰 없음");
+            //이렇게 넘기는게 맞나?
             chain.doFilter(request,response);
             return;
         }
 
-        String vaildToken = jwtProvider.validateToken(accessToken.get());
-        saveAuthentication(vaildToken);
+        jwtProvider.validateToken(accessToken.get());
+        saveAuthentication(accessToken.get());
 
         chain.doFilter(request,response);
     }
@@ -51,6 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (email != null) {
             User user = userRepository.findByEmail(email);
+            System.out.println("null test"+user.getNickname());
             // user를 세션에 저장하기 위해 authentication 객체를 생성한다.
             PrincipalDetails principalDetails = new PrincipalDetails(user);
             Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());

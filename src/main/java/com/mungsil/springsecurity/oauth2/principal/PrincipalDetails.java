@@ -25,7 +25,6 @@ public class PrincipalDetails implements OAuth2User {
     private User user;
     private Map<String, Object> attributes;
 
-    //일반 로그인
     public PrincipalDetails(User user) {
         this.user = user;
     }
@@ -52,7 +51,7 @@ public class PrincipalDetails implements OAuth2User {
     @Override
     public String getName() {
         //별로 안중요해서 null 처리해도 ok(안쓴다는디요)
-        return (String) attributes.get("sub");
+        return user.getNickname();
     }
 
     public String getEmail() {
